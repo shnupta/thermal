@@ -1,5 +1,8 @@
 const std = @import("std");
 
+// TODO: take inspiration from the zig tokenizer.zig and look for actual keywords
+// as well
+
 pub const Token = struct {
     id: Id,
     start: usize,
@@ -20,7 +23,7 @@ pub const Token = struct {
                 .literal => "<literal>",
                 .number => "<number>",
                 .byte => "<byte>",
-                .quoted_ascii_string => "<quoted ascii string>",
+                .quoted_ascii_string => "<quoted_ascii_string>",
                 .eof => "<eof>",
                 .line_comment => "<line_comment>",
                 .invalid => unreachable,
@@ -147,7 +150,7 @@ pub const Lexer = struct {
                         '0'...'9' => {
                             self.error_token = .{
                                 .id = .number,
-                                .start = result.start,
+                                .start = self.pos,
                                 .end = self.pos + 1,
                                 .line_number = self.line_number,
                             };
@@ -178,7 +181,7 @@ pub const Lexer = struct {
                             if (self.buffer[self.pos - 1] != '0') {
                                 self.error_token = .{
                                     .id = .number,
-                                    .start = result.start,
+                                    .start = self.pos,
                                     .end = self.pos + 1,
                                     .line_number = self.line_number,
                                 };
@@ -190,7 +193,7 @@ pub const Lexer = struct {
                         else => {
                             self.error_token = .{
                                 .id = .number,
-                                .start = result.start,
+                                .start = self.pos,
                                 .end = self.pos + 1,
                                 .line_number = self.line_number,
                             };
@@ -204,7 +207,7 @@ pub const Lexer = struct {
                         else => {
                             self.error_token = .{
                                 .id = .byte,
-                                .start = result.start,
+                                .start = self.pos,
                                 .end = self.pos + 1,
                                 .line_number = self.line_number,
                             };
@@ -218,7 +221,7 @@ pub const Lexer = struct {
                         else => {
                             self.error_token = .{
                                 .id = .byte,
-                                .start = result.start,
+                                .start = self.pos,
                                 .end = self.pos + 1,
                                 .line_number = self.line_number,
                             };
@@ -240,7 +243,7 @@ pub const Lexer = struct {
                         else => {
                             self.error_token = .{
                                 .id = .byte,
-                                .start = result.start,
+                                .start = self.pos,
                                 .end = self.pos + 1,
                                 .line_number = self.line_number,
                             };
