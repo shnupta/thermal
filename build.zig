@@ -8,6 +8,11 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/thermal.zig"),
     });
 
+    const elio = b.dependency("elio", .{
+        .optimize = optimize,
+        .target = target,
+    });
+
     const exe = b.addExecutable(.{
         .name = "thermal",
         .root_source_file = b.path("src/main.zig"),
@@ -15,6 +20,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     exe.root_module.addImport("thermal", thermal);
+    exe.root_module.addImport("elio", elio.module("elio"));
     b.installArtifact(exe);
     const run_cmd = b.addRunArtifact(exe);
 

@@ -10,13 +10,13 @@ pub const Token = struct {
     line_number: usize,
 
     pub const Id = enum {
+        invalid,
         literal,
         number,
         byte,
         quoted_ascii_string,
         eof,
         line_comment,
-        invalid,
 
         pub fn nameForErrorDisplay(self: Id) []const u8 {
             return switch (self) {
