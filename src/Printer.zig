@@ -51,10 +51,12 @@ pub fn lineFeed(self: *Printer) void {
     self.internalWrite(Commands.lineFeed());
 }
 
+/// Writes raw bytes to the printer. Intended use is for writing text.
 pub fn text(self: *Printer, bytes: []const u8) void {
     self.internalWrite(bytes);
 }
 
+/// Send text using std.fmt.allocPrint (will allocate).
 pub fn formattedText(self: *Printer, comptime fmt: []const u8, args: anytype) void {
     if (self.internal_error != null) return;
     const formatted = std.fmt.allocPrint(self.allocator, fmt, args) catch |err| {
@@ -109,4 +111,14 @@ pub fn justify(self: *Printer, just: Justify) void {
 pub fn resetStyles(self: *Printer) void {
     self.internalWrite(Commands.printModes());
     self.internalWrite(&.{0x00});
+}
+
+const CharacterCode = enum(u8) {
+    pc437 = 0,
+    wpc1252 = 16,
+};
+
+pub fn setCharacterCode(self: *Printer, code: CharacterCode) void {
+    self.internalWrite(Commands.characterCode());
+    self.internalWrite(&.{@intFromEnum(code)});
 }

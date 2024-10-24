@@ -48,4 +48,8 @@ pub fn printModes() Command {
     return comptime esc() ++ &[1]u8{'!'};
 }
 
+pub fn characterCode() Command {
+    return comptime esc() ++ &[1]u8{'t'};
+}
+
 // TODO: FF (printing complete)
